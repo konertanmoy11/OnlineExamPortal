@@ -19,11 +19,14 @@ const InfoPage = (props) => {
                     <CardText style={{ margin: '1' }}><b>(3) </b> There's is no restriction in order to attempt questions.</CardText>
                     <CardText style={{ margin: '1' }}><b>(4) </b> A timer on the right-top will indicate you on how much time is left. Button-convension are as follows :</CardText>
                     <CardText style={{ margin: '1' }}><Button outline color="primary">1</Button> => This is for unattempted question</CardText>
-                    <CardText style={{ margin: '1' }}><Button color="primary" >1</Button> => This is for current question</CardText>
+                    
                     <CardText style={{ margin: '1' }}><Button color="success">1</Button> => This is for saved question</CardText>
                     <CardText style={{ margin: '1' }}><b>(5) </b>Always remember to save the response after selecting the option using <Button color="danger"> SAVE </Button> , else your response won't be considered.</CardText>
-                    <CardText style={{ margin: '1' }}><b>(6) </b>For final submission of all responses, select <Button color="danger"> END TEST </Button> on the right bottom of the screen. The result score will not be shown to the candidate.</CardText>
-                    <CardText style={{ margin: '1' }}><b>(7) </b>If theres any problem like fault in computer-setting, internet-connection etc, please contact the support team ASAP.</CardText>
+                    <CardText style={{ margin: '1' }}><b>(6) </b>Every correct answer will award (+3) and for every wrong answer, (-1) penalty is applicable.</CardText>
+                    <CardText style={{ margin: '1' }}><b>(7) </b>For final submission of all responses, select <Button color="danger"> END TEST </Button> on the right bottom of the screen.</CardText>
+                    <CardText style={{ margin: '1' }}><b>(8) </b>After the final submission, your final score will be emailed to your login registered email-ID.</CardText>
+                    <CardText style={{ margin: '1' }}><b>(9) </b>A window message would atlast confirm your safe final submission, and the portal would redirect to the login page again.</CardText>
+                    <CardText style={{ margin: '1' }}><b>(10) </b>If theres any problem like fault in computer-setting, internet-connection etc, please contact the support team ASAP.</CardText>
                     </div>
                     <CardText style={{ backgroundColor: 'skyblue', padding: '10px 0px 10px 0px', "text-align" : "center"}}><Button tag={Link} to={"/test"} color="primary">START TEST >> </Button></CardText>
 

@@ -53,7 +53,7 @@ export class LoginPage extends Component {
                       required
                       autoFocus
                     />
-                    <label htmlFor="inputEmail">Email address</label>
+                    <label htmlFor="inputEmail">Email addresss</label>
                   </div>
 
                   <div className="form-label-group">
