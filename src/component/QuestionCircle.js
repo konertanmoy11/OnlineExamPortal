@@ -18,9 +18,6 @@ export class QuestionCircle extends Component {
         if(this.state.attempted) {
             return "btn button-2ch btn-success";
         }
-        if(this.state.current) {
-            return "btn button-2ch btn-primary";
-        }
 
         return "btn button-2ch btn-outline-primary";
     }

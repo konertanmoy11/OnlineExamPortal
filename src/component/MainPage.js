@@ -3,7 +3,8 @@ import TimerCountDown from './Timer';
 import QuestionCard from './QuestionCard';
 import QuestionCircle from './QuestionCircle';
 import axios from 'axios';
-
+import AuthService from '../utils/AuthService';
+const BASE_URL_API = 'http://192.168.43.235:8080/EMSMain/main';
 export class MainPage extends Component {
     constructor(props) {
         super(props)
@@ -27,23 +28,23 @@ export class MainPage extends Component {
         };
 
         this.currentQButton = React.createRef();
-        this.parseLinkData = this.parseLinkData.bind(this);
         this.fetchQuestions = this.fetchQuestions.bind(this);
         this.tableGen = this.tableGen.bind(this);
         this.setQuestion = this.setQuestion.bind(this);
         this.changeQuestion = this.changeQuestion.bind(this);
         this.answerQuestion = this.answerQuestion.bind(this);
         this.saveResponse = this.saveResponse.bind(this);
-        this.onChangeFullscreen = this.onChangeFullscreen.bind(this)
+        this.onChangeFullscreen = this.onChangeFullscreen.bind(this);
+        this.submitResponse = this.submitResponse.bind(this);
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3001/users/1')
+        axios.post(BASE_URL_API + '/getuserdetails', { "jwt": localStorage.getItem('token')})
             .then(res => {
                 let user = {};
-                user.user_id = res.data.id;
+                user.user_id = res.data.userId;
                 user.user_name = res.data.name;
-                user.user_dob = res.data.dob;
+                user.user_dob = res.data.dateOfBirth;
                 user.exam_subject = res.data.subject;
                 user.image = res.data.image;
                 this.setState({ user: user });
@@ -61,9 +62,8 @@ export class MainPage extends Component {
         this.setState({ currentQuestionID: id, currentQuestion: question, currentAnswers: answers });
     }
 
-    answerQuestion = (e) => {
-        const { value } = e.target;
-        this.setState({ currentResponse: value });
+    answerQuestion = (response) => {
+        this.setState({ currentResponse: response });
     }
 
     saveResponse = (e, qid = this.state.currentQuestionID) => {
@@ -77,12 +77,13 @@ export class MainPage extends Component {
         });
     }
     changeQuestion = (qid = this.state.currentQuestionID) => {
-        this.setState({ currentQuestion: this.state.questions[qid - 1].question, currentAnswers: this.state.questions[qid - 1].options, currentQuestionID: this.state.questions[qid - 1].id });
+        this.setState({ currentQuestion: this.state.questions[qid - 1].question, currentAnswers: this.state.questions[qid - 1].options, currentQuestionID: this.state.questions[qid - 1].id});
     }
-    fetchQuestions = (link = 'http://localhost:3001/questions') => {
-        axios.get(link)
+    fetchQuestions = () => {
+        axios.post(BASE_URL_API + '/getquestions', { "jwt": localStorage.getItem("token"), subjectName: "subject_1"})
             .then(res => {
-                let data = res.data;
+                console.log(res.data);
+                let data = res.data.allQuestions;
                 let i = 1;
                 data.map(n => {
                     n['id'] = i;
@@ -112,40 +113,18 @@ export class MainPage extends Component {
         return rows;
     }
 
-    parseLinkData = (data) => {
-        const linkRegex = /<([^>]+)/g;
-        const relRegex = /rel="([^"]+)/g;
-        let linkArray = [];
-        let relArray = [];
-        let finalResult = {};
-        let temp;
-        while ((temp = linkRegex.exec(data)) != null) {
-            linkArray.push(temp[1]);
-        }
-        while ((temp = relRegex.exec(data)) != null) {
-            relArray.push(temp[1]);
-        }
-
-        finalResult = relArray.reduce((object, value, index) => {
-            object[value] = linkArray[index];
-            return object;
-        }, {});
-
-        if (finalResult.hasOwnProperty('prev')) {
-            this.setState({ prev_page_link: finalResult.prev })
-        }
-        else {
-            this.setState({ prev_page_link: "" })
-        }
-
-        if (finalResult.hasOwnProperty('next')) {
-            this.setState({ next_page_link: finalResult.next })
-        }
-        else {
-            this.setState({ next_page_link: "" })
-        }
+    submitResponse = (e) => {
+        e.preventDefault();
+        const data = {
+            markedOptions : this.state.responses,
+            subject: this.state.user.exam_subject,
+            jwt: localStorage.getItem("token")
+        };
+        axios.post(BASE_URL_API + "/calculateresults", data);
+        window.alert("Thank you for taking the test");
+        AuthService.logOut();
+        this.props.history.push("/login");
     }
-
 
     render() {
         return (
@@ -191,7 +170,7 @@ export class MainPage extends Component {
                                         </table>
                                     </div>
                                     <div className="card-footer text-center">
-                                        <button className="btn btn-danger"><h3>End Test</h3></button>
+                                        <button className="btn btn-danger" onClick={this.submitResponse}><h3>End Test</h3></button>
                                     </div>
                                 </div>
                             </div>
