@@ -4,7 +4,8 @@ import QuestionCard from './QuestionCard';
 import QuestionCircle from './QuestionCircle';
 import axios from 'axios';
 import AuthService from '../utils/AuthService';
-const BASE_URL_API = 'http://192.168.43.235:8080/EMSMain/main';
+const BASE_URL_API = 'http://192.168.43.235:8080/EMSMain/main'; 
+const BASE_URL_API_BLOCKCHAIN='http://192.168.43.235:8080/chain';
 export class MainPage extends Component {
     constructor(props) {
         super(props)
@@ -120,7 +121,17 @@ export class MainPage extends Component {
             subject: this.state.user.exam_subject,
             jwt: localStorage.getItem("token")
         };
-        axios.post(BASE_URL_API + "/calculateresults", data);
+        axios.post(BASE_URL_API + "/calculateresults", data)
+        .then(res=>{
+            let blockChainString="";
+            blockChainString=res.data.email+":"+res.data.marks;
+            let f = new FormData();
+            f.append("text", blockChainString);
+            axios.post(BASE_URL_API_BLOCKCHAIN + "/addtoblock",f, { headers: {
+                "Accept": "application/json"
+            }});
+        });
+
         window.alert("Thank you for taking the test");
         AuthService.logOut();
         this.props.history.push("/login");
