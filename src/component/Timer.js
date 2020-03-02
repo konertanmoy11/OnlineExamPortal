@@ -10,6 +10,12 @@ export class TimerCountDown extends Component {
                         <Timer
                             initialTime={10800000}
                             direction="backward"
+                            checkpoints={[
+                                {
+                                    time: 0,
+                                    callback: this.props.endTest,
+                                }
+                            ]}
                         >
                             {
                                 () => (

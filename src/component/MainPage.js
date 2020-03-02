@@ -114,8 +114,7 @@ export class MainPage extends Component {
         return rows;
     }
 
-    submitResponse = (e) => {
-        e.preventDefault();
+    submitResponse = () => {
         const data = {
             markedOptions : this.state.responses,
             subject: this.state.user.exam_subject,
@@ -163,7 +162,7 @@ export class MainPage extends Component {
                             </div>
                         </div>
                         <div className="col p-0 m-0">
-                            <TimerCountDown />
+                            <TimerCountDown endTest={this.submitResponse}/>
                         </div>
                     </div>
                     <div className='row flex-grow-1 h-100'>

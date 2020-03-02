@@ -17,8 +17,8 @@ function App() {
         <Route exact path="/login" component={LoginPage}/>
         <ProtectedRoute component={MainPage} path="/test"/>
         <ProtectedRoute component={InfoPage} path="/"/>
-        {/* <Route component={MainPage} path="/test"/>
-        <Route component={InfoPage} path="/"/> */}
+        {/*<Route component={MainPage} path="/test"/>
+        <Route component={InfoPage} path="/"/>*/}
       </Switch>
     </Router>
   );
